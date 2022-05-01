@@ -1,4 +1,4 @@
-### Informações Importantes!
+### INFORMAÇÕES IMPORTANTES !
 
 Esta API REST criada utilizando express para prover dados a aplicação front-end ''graphin''.
 
