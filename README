@@ -1,0 +1,8 @@
+### Informações Importantes!
+
+Esta API REST foi criada para prover dados a aplicação front-end ''GRAPHIN''.
+
+### INSTALAÇÃO
+
+`npm install: Instalar dependências.`
+`npm run start-dev: Iniciar o Servidor.`
