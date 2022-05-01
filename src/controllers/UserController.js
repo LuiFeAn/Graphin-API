@@ -20,7 +20,7 @@ class UserController {
         }
 
         if(user_id){
-            const user = await UserRepository.findByReq(req.decode.user_id);
+            const user = await UserRepository.findByReq(user_id);
             if(user.length > 0){
                 return res.status(200).json(user);
             }
