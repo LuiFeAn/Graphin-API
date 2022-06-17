@@ -1,126 +1,74 @@
-const mysql = require("../database");
+const ExecuteQuery = require("../helpers/ExecuteQuery");
 
 class UserRepository{
 
-    findByEmailAndPassword(email,password){
+    async findByEmailAndPassword(email,password){
 
-        return new Promise((resolve,reject)=>{
-            
-            const query = `SELECT * FROM users
-            WHERE user_email = ? AND user_password = ?`;
-            mysql.query(query,[email,password],(err,user)=>{
-
-            if(err) return reject(err)
-            resolve(user);
-
-        });
-        })
+         
+        const query = `SELECT * FROM users
+        WHERE user_email = ? AND user_password = ?`;
+        return await ExecuteQuery(query,[email,password]);
 
     }
 
-    findByReq(id){
+    async findById(id){
 
-        return new Promise((resolve,reject)=>{
-
-            const query = `SELECT * FROM users
-            WHERE user_id = ?`;
-            mysql.query(query,[id],(err,user)=>{
-
-                if(err) return reject(err);
-                resolve(user);
-
-            })
-
-        })
-    }
-
-    findByEmail(email){
-
-        return new Promise((resolve,reject)=>{
-
-            const query = `SELECT user_name
-            FROM users
-            WHERE user_email = ?`;
-
-            mysql.query(query,[email],(err,re)=>{
-                
-                if(err) return reject();
-
-                return resolve(re);
-                
-            })
-
-        })
+        const query = `SELECT * FROM users
+        WHERE user_id = ?`;
+        return await ExecuteQuery(query,[id]);
 
     }
 
-    getUserByName(name){
+    async findByEmail(email){
 
-        return new Promise((resolve,reject)=>{
-
-            const query = "SELECT user_name,user_bio,user_pic FROM users WHERE user_name LIKE ?";
-
-            mysql.query(query,[`%${name}%`],(err,users)=>{
-                
-                if(err) return reject(err);
-
-                resolve(users);
-
-            })
-            
-        })
+        const query = `SELECT user_name
+        FROM users
+        WHERE user_email = ?`;
+        return await ExecuteQuery(query,[email]);
 
     }
 
-    create(username,email,password){
+    async getUsersByName(name){
+
+        const query = "SELECT user_id,user_name,user_pic FROM users WHERE user_name LIKE ?";
+        return await ExecuteQuery(query,[`%${name}%`]);
         
-        return new Promise((resolve,reject)=>{
+    }
 
-            const query = `INSERT INTO users
-            (user_name,user_email,user_password) VALUES (?,?,?)`;
+     async getUserByNameOrId(user){
 
-            mysql.query(query,[username,email,password],(err)=>{
-                
-
-                if(err) return reject("Não foi possível realizar o cadastro!");
-
-                resolve("Cadastrado com sucesso!");
-
-            })
-
-        })
+        const query = "SELECT user_id,user_name,user_bio,user_pic FROM users WHERE user_name = ? OR user_id = ?";
+        return await ExecuteQuery(query,[user]);
 
     }
 
-    update(username,useremail,userpassword,userbio,userid){
+    async getUserById(name){
+
+        const query = "SELECT user_id, user_name,user_bio,user_pic FROM users WHERE user_name LIKE ?";
+        return await ExecuteQuery(query,[`%${name}%`]);
+
+    }
+
+    async create(username,email,password){
         
-        return new Promise((resolve,reject)=>{
-
-            const query = "UPDATE users SET user_name = ?, user_email = ?, user_password = ?, user_bio = ? WHERE user_id = ?";
-
-            mysql.query(query,[username,useremail,userpassword,userbio,userid],(err)=>{
-
-                if(err) reject(false);
-
-                resolve(true);
-
-            });
-
-        })
+        const query = `INSERT INTO users
+        (user_name,user_email,user_password) VALUES (?,?,?)`;
+        ExecuteQuery(query,[username,email,password]);
 
     }
 
-    updateUserPhoto(photo,userid){
+    async update(username,useremail,userpassword,userbio,userid){
+        
+        const query = "UPDATE users SET user_name = ?, user_email = ?, user_password = ?, user_bio = ? WHERE user_id = ?";
+        ExecuteQuery(query,[username,useremail,userpassword,userbio,userid]);
 
-        return new Promise((resolve,reject)=>{
-            const query = `UPDATE users SET user_pic = ? WHERE user_id = ?`
+    }
 
-            mysql.query(query,[photo,userid],(err,up)=>{
-                if(err) return reject(false);
-                resolve(true);
-            })
-        })
+    async updateUserPhoto(photo,userid){
 
+        const query = `UPDATE users SET user_pic = ? WHERE user_id = ?`
+        ExecuteQuery(query,[photo,userid]);
+        
     }
 }
 
