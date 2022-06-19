@@ -4,10 +4,43 @@ const PhotoRepository = require("../repositories/PhotoRepository");
 
 class LoginController {
 
+    async authenticated(req,res){
+
+        const {decode} = req;
+
+        if(decode){
+
+            const {user_id} = decode;
+
+            try{
+
+                const [user] = await UserRepository.findById(
+                    user_id
+                );
+
+                const photos = await PhotoRepository.getPhotoById(
+                    user_id,
+                );
+
+                return res.json({
+                    user,
+                    photos,
+                }).status(200);
+
+            }catch(err){
+
+                return res.json({
+                    err
+                }).status(400);
+
+            }
+            
+        }
+    }
+
     async authenticate(req,res){
 
         const {email,password} = req.body;
-        const {decode} = req;
 
         if(email && password){
 
@@ -47,34 +80,6 @@ class LoginController {
 
         }
 
-        if(decode){
-
-            const {user_id} = decode;
-
-            try{
-
-                const [user] = await UserRepository.findById(
-                    user_id
-                );
-
-                const photos = await PhotoRepository.getPhotoById(
-                    user_id,
-                );
-
-                return res.json({
-                    user,
-                    photos,
-                }).status(200);
-
-            }catch(err){
-
-                return res.json({
-                    err
-                }).status(400);
-
-            }
-            
-        }
         
     }
 

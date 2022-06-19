@@ -8,7 +8,7 @@ const LoginController = require("../controllers/LoginController");
 
 const router = Router();
 
-router.get("/login",VerifyJwt,LoginController.authenticate);
+router.get("/login",VerifyJwt,LoginController.authenticated);
 router.post("/login",LoginController.authenticate);
 
 router.get("/users",VerifyJwt,UserController.index);
