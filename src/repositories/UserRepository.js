@@ -36,9 +36,8 @@ class UserRepository{
     }
 
      async getUserByNameOrId(user){
-
         const query = "SELECT user_id,user_name,user_bio,user_pic FROM users WHERE user_name = ? OR user_id = ?";
-        return await ExecuteQuery(query,[user]);
+        return await ExecuteQuery(query,[user,user]);
 
     }
 

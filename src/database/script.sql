@@ -16,3 +16,9 @@ CREATE TABLE IF NOT EXISTS `photos`(
     `insert_date` DATETIME DEFAULT CURRENT_TIMESTAMP
 
 );
+
+CREATE TABLE IF NOT EXISTS `user_has_folow`(
+
+    `user_id` INT (10) NOT NULL,
+    `follow_id` INT (10) NOT NULL
+)

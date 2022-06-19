@@ -37,11 +37,10 @@ class UserController {
         if(id){
 
             try{
-
+               
                 const user = await UserRepository.getUserByNameOrId(
                     id,
                 );
-
 
                 res.json(
                     user
@@ -64,7 +63,7 @@ class UserController {
         const {name,email,password} = req.body;
 
         try{
-
+            
             const [userExists] = await UserRepository.findByEmail(email);
 
             if(userExists) return res.json({
@@ -92,20 +91,34 @@ class UserController {
 
     async update(req,res){
         
-        const {email,password,userbio} = req.body;
+        const {name,email,password,userbio} = req.body;
         const {file} = req;
         const {user_id} = req.decode;
 
-        if(email && password && userbio){
+        if(name || email || password || userbio){
 
             try{
 
-                const findOne = await UserRepository.findByReq(user_id);
-                await UserRepository.update(username || findOne[0].user_name,email || findOne[0].user_email, password || findOne[0].user_password,userbio || findOne[0].user_bio,req.decode.user_id);
+                const [verifyEmail] = await UserRepository.findByEmail(email);
+
+                if(verifyEmail) return res.json({
+                    msg:'Email já existente ! por favor, insira um diferente.'
+                }).status(400);
+
+                const [user] = await UserRepository.findById(user_id);
+                const {user_name,user_email,user_password,user_bio} = user;
+
+                await UserRepository.update(
+                    name ? name : user_name,
+                    email ? email : user_email,
+                    password ? password : user_password,
+                    userbio ? userbio : user_bio,
+                    user_id
+                );
+
                 return res.json({
-                    error:"Informações atualizadas com sucesso!"
-                }
-                ).status(200);
+                    msg:'Informações atualizadas com sucesso !'
+                }).status(200);
     
             }catch(err){
     
